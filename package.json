@@ -1,0 +1,14 @@
+{
+  "name": "cryptocompare2csv",
+  "version": "1.0.0",
+  "description": "fetch crypto data and store as flat files",
+  "main": "index.js",
+  "repository": "https://github.com/kearnz/crypto-2-csv.git",
+  "author": "kearnz <josephkearney14@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "cryptocompare": "^0.5.0",
+    "json2csv": "^4.1.2",
+    "underscore": "^1.9.0"
+  }
+}
