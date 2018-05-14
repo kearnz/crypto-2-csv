@@ -30,5 +30,7 @@ let getExchanges = async (csvName,wrp=jcsv) => {
     }
 }
 
-module.exports.getCoins = getCoins;
-module.exports.getExchanges = getExchanges;
+module.exports = {
+    getCoins: getCoins,
+    getExchanges: getExchanges
+}

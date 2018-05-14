@@ -2,5 +2,6 @@ global.fetch = require('node-fetch');
 
 const refdata = require('./calls/refdata');
 
-//refdata.getCoins();
-//refdata.getExchanges();
+// creates the genaric csv's
+refdata.getCoins();
+refdata.getExchanges();
