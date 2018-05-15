@@ -1,6 +1,6 @@
-const JsonCsv = require('json2csv').Parser,
-    _ = require('underscore'),
-    fs = require('fs');
+const JsonCsv = require("json2csv").Parser,
+    _ = require("underscore"),
+    fs = require("fs");
 
 // wrapper function
 let jsonToCsv = async (data, csvName, explode) => {
