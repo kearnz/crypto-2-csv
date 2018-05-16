@@ -27,22 +27,23 @@ command
 
 // get daily prices
 command
-    .command('getDailyPrices <fsym> <tsym> [lim] [exch]')
+    .command('getDailyPrices <fsym> <tsym> [exch] [lim]')
     .alias('gdp')
     .description('Daily prices from Crypto Compare')
-    .action((fsym,tsym,lim,exch) => {
+    .action((fsym,tsym,exch,lim) => {
         let options = {};
         options.limit = lim || 2000;
         if(exch) {options.exchange = exch}
         console.log(options);
         pricing.getPrices(cc.histoDay,fsym,tsym,options)
     });
+
 // get hourly prices
 command
-    .command('getHourlyPrices <fsym> <tsym> [lim] [exch]')
+    .command('getHourlyPrices <fsym> <tsym> [exch] [lim]')
     .alias('ghp')
     .description('Hourly prices from Crypto Compare')
-    .action((fsym,tsym,lim,exch) => {
+    .action((fsym,tsym,exch,lim) => {
         let options = {};
         options.limit = lim || 2000;
         if(exch) {options.exchange = exch}
