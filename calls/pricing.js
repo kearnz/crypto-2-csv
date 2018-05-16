@@ -9,7 +9,7 @@ let getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
         let priceData = _.map(priceCall,p => {
             p["symbol"] = fsym;
             p["tsym"] = tsym;
-            p["exchange"] = options.exchange || "topExchanges";
+            p["exchange"] = options.exchange;
             return p;
         });
         let csvName = `${fnName.name}_${fsym}_${tsym}_${priceData[0].exchange}.csv`;
