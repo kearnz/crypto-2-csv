@@ -50,11 +50,3 @@ command
     });
 
 command.parse(process.argv);
-
-//refdata.getExchanges("exchanges.csv");
-// generate daily and hourly for top 5 coins
-//["BTC","ETH","BCH","XRP","EOS"].map(i => {
-//    pricing.getPrices(cc.histoDay,i,"USD",{"limit":2000})
-//    pricing.getPrices(cc.histoHour,i,"USD",{"limit":2000})
-//});
-
