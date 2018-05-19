@@ -1,18 +1,20 @@
+// imports
 const jcsv = require("../wrapper").jsonToCsv,
     _ = require("underscore"),
     cc = require("cryptocompare");
 
 // generic pricing function
-let getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
+// fnName = histoDay, histoHour, histoMinute
+const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
     try {
-        let priceCall = await fnName(fsym,tsym,options);
-        let priceData = _.map(priceCall,p => {
+        const priceCall = await fnName(fsym,tsym,options);
+        const priceData = _.map(priceCall,p => {
             p["symbol"] = fsym;
             p["tsym"] = tsym;
             p["exchange"] = options.exchange || "average";
             return p;
         });
-        let csvName = `${fnName.name}_${fsym}_${tsym}_${priceData[0].exchange}.csv`;
+        const csvName = `${fnName.name}_${fsym}_${tsym}_${priceData[0].exchange}.csv`;
         await wrp(priceData,csvName)
     } 
     catch (e) {
@@ -20,8 +22,22 @@ let getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
     }
 }
 
+// topexchanges by coin
+const getTopExchanges = async (fsym,tsym,lim=5) => {
+    try {
+        const topCall = await cc.topExchanges(fsym,tsym,lim);
+        const csvName = `Top_vol_${fsym}_${tsym}_${lim}.csv`;
+        await wrp(price,csvName)
+    }
+    catch (e){
+        console.log(e);
+    }
+}
+
+// exports
 module.exports = {
-    getPrices: getPrices
+    getPrices: getPrices,
+    getTopExchanges: getTopExchanges
 }
 
 

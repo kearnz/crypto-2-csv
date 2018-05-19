@@ -1,9 +1,10 @@
+// imports
 const jcsv = require("../wrapper").jsonToCsv,
     _ = require("underscore"),
     cc = require("cryptocompare");
 
 // get all available coins tracked by cc and store in flattened csv
-let getCoins = async (csvName,wrp=jcsv) => {
+const getCoins = async (csvName,wrp=jcsv) => {
     try {
         let coinCall = await cc.coinList();
         let coinData = _.map(_.pairs(coinCall["Data"]), _.last);
@@ -14,11 +15,8 @@ let getCoins = async (csvName,wrp=jcsv) => {
     }
 }
 
-/* get all exchanges, as well as the coins that trade on them
-// flatten into csv
-// NOTE - could extend to get all currencies for coins
-*/
-let getExchanges = async (csvName,wrp=jcsv) => {
+// get all exchanges, as well as the coins that trade on them
+const getExchanges = async (csvName,wrp=jcsv) => {
     try {
         let exchCall = await cc.exchangeList();
         let exchData = _.map(_.keys(exchCall), p => {
@@ -34,7 +32,7 @@ let getExchanges = async (csvName,wrp=jcsv) => {
     }
 }
 
-// export both methods
+// exports
 module.exports = {
     getCoins: getCoins,
     getExchanges: getExchanges

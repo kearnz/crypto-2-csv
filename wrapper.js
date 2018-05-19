@@ -3,7 +3,7 @@ const JsonCsv = require("json2csv").Parser,
     fs = require("fs");
 
 // wrapper function
-let jsonToCsv = async (data, csvName, explode) => {
+const jsonToCsv = async (data, csvName, explode) => {
     try {
         const fields = _.keys(data[0]);
         const jsonData = explode ? new JsonCsv({fields, unwind: explode}) : new JsonCsv({fields});
