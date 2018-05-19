@@ -55,7 +55,7 @@ const exchanges = new Command(
 );
 
 const prices = new Command(
-    command = 'getDailyPrices <time> <fsym> <tsym> [exch] [limit]',
+    command = 'getPrices <time> <fsym> <tsym> [exch] [limit]',
     alias = "gph",
     description = "Get historical prices based on time frequency",
     action = callPrices
