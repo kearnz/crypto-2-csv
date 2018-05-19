@@ -1,6 +1,7 @@
 // get ref data and pricing methods
 const refdata = require("../calls/refdata"),
     pricing = require("../calls/pricing"),
+    _ = require("underscore"),
     cc = require("cryptocompare");
 
 // helper functions
