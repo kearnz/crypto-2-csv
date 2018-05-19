@@ -1,5 +1,6 @@
-// imports
-const jcsv = require("../wrapper").jsonToCsv,
+/* PRICING API CALLS */
+
+const jcsv = require("../wrappers/fileparser").jsonToCsv,
     _ = require("underscore"),
     cc = require("cryptocompare");
 
@@ -27,7 +28,7 @@ const getTopExchanges = async (fsym,tsym,lim=5) => {
     try {
         const topCall = await cc.topExchanges(fsym,tsym,lim);
         const csvName = `Top_vol_${fsym}_${tsym}_${lim}.csv`;
-        await wrp(price,csvName)
+        await wrp(topCall,csvName)
     }
     catch (e){
         console.log(e);

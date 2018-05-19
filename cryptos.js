@@ -1,3 +1,5 @@
+/* MAIN CLI ENTRY POINT */
+
 // command line part of the application
 global.fetch = require("node-fetch");
 

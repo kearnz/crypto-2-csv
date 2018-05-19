@@ -1,3 +1,5 @@
+/* CONTAINS HELPER FUNCTIONS FOR FILE PARSING FROM JSON */
+
 const JsonCsv = require("json2csv").Parser,
     _ = require("underscore"),
     fs = require("fs");

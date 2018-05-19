@@ -1,5 +1,6 @@
-// imports
-const jcsv = require("../wrapper").jsonToCsv,
+/* REF DATA API CALLS */
+
+const jcsv = require("../wrappers/fileparser").jsonToCsv,
     _ = require("underscore"),
     cc = require("cryptocompare");
 
