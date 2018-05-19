@@ -28,8 +28,12 @@ const callPrices = (time,fsym,tsym,exch,lim) => {
     }
 }
 
+// helper top exch func
+const callTopExchanges = pricing.getTopExchanges(fsym,tsym,lim=5); 
+
 module.exports = {
     callCoins: callCoins,
     callExchanges: callExchanges,
-    callPrices: callPrices
+    callPrices: callPrices,
+    callTopExchanges: callTopExchanges
 }

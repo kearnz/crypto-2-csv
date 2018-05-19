@@ -25,5 +25,6 @@ const addCommand = (cmd, prog=program) => {
 addCommand(commands.coins);
 addCommand(commands.exchanges);
 addCommand(commands.prices);
+addCommand(commands.topexbycoin);
 
 program.parse(process.argv);

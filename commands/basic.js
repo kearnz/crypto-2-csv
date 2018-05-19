@@ -20,15 +20,23 @@ const exchanges = new Command(
 );
 
 const prices = new Command(
-    command = 'getPrices <time> <fsym> <tsym> [exch] [limit]',
+    command = "getPrices <time> <fsym> <tsym> [exch] [limit]",
     alias = "gph",
     description = "Get historical prices based on time frequency",
     action = api.callPrices
+);
+
+const topexbycoin = new Command(
+    command = "getCoinTopExchanges <fsym> <tsym> [lim]",
+    alias = "gcte",
+    description = "Get top exchanges for a currency",
+    action = api.callTopExchanges
 )
 
 // exports
 module.exports = {
     coins: coins,
     exchanges: exchanges,
-    prices: prices
+    prices: prices,
+    topexbycoin: topexbycoin
 }
