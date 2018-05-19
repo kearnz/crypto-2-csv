@@ -24,7 +24,7 @@ const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
 }
 
 // topexchanges by coin
-const getTopExchanges = async (fsym,tsym,lim=5) => {
+const getTopExchanges = async (fsym,tsym,lim=5,wrp=jcsv) => {
     try {
         const topCall = await cc.topExchanges(fsym,tsym,lim);
         const csvName = `Top_vol_${fsym}_${tsym}_${lim}.csv`;
