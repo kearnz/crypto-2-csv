@@ -11,7 +11,7 @@ const callCoins = (csvname) => refdata.getCoins(csvname);
 const callExchanges = (csvname, explode) => refdata.getExchanges(csvname, explode);
 
 // helper price func
-const callPrices = (time, fsym, tsym, exch, lim) => {
+const callPrices = (time, fsym, tsym, lim, exch) => {
     const options = {};
     options.limit = lim || 2000;
     const priceFn = {
