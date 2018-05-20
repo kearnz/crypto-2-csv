@@ -61,4 +61,4 @@ typings/
 .next
 
 # my miscellaneous tasks
-.todo
+*.todo

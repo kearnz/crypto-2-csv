@@ -3,3 +3,4 @@
 # 3 - Need to figure out how to do options in commands & improve command line tool in general
 # 4 - See if can support express app or if that needs to be separate.
 # 5 - Need to add in time frame option for pricing data
+# 6 - Better error handling & unit testing need to be incorporated.
