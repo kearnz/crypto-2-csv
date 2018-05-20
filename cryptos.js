@@ -26,5 +26,9 @@ addCommand(commands.coins);
 addCommand(commands.exchanges);
 addCommand(commands.prices);
 addCommand(commands.topexbycoin);
+addCommand(commands.topfiatbycoin);
+//
+
+
 
 program.parse(process.argv);

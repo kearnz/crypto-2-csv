@@ -33,9 +33,14 @@ const callTopExchanges = (fsym, tsym, lim=5) => {
     pricing.getTopExchanges(fsym, tsym, lim); 
 }
 
+const callTopFiat = (fsym, lim=5) => {
+    pricing.getTopFiat(fsym, lim);
+}
+
 module.exports = {
     callCoins: callCoins,
     callExchanges: callExchanges,
     callPrices: callPrices,
-    callTopExchanges: callTopExchanges
+    callTopExchanges: callTopExchanges,
+    callTopFiat: callTopFiat
 }

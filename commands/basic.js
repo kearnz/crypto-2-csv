@@ -37,10 +37,19 @@ const topexbycoin = new Command(
     action = api.callTopExchanges
 )
 
+// top pairs for (crytpo,fiat)
+const topfiatbycoin = new Command(
+    command = "getCoinTopFiat <fsym> [lim]",
+    alias = "gctf",
+    description = "Get top fiat pairing for a currency",
+    action = api.callTopFiat
+)
+
 // exports
 module.exports = {
     coins: coins,
     exchanges: exchanges,
     prices: prices,
-    topexbycoin: topexbycoin
+    topexbycoin: topexbycoin,
+    topfiatbycoin: topfiatbycoin
 }

@@ -24,11 +24,23 @@ const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
 }
 
 // topexchanges by coin
-const getTopExchanges = async (fsym,tsym,lim=5,wrp=jcsv) => {
+const getTopExchanges = async (fsym, tsym, lim, wrp=jcsv) => {
     try {
-        const topData = await cc.topExchanges(fsym,tsym,lim);
+        const topExchData = await cc.topExchanges(fsym, tsym, lim);
         const csvName = `Top_vol_${fsym}_${tsym}_${lim}.csv`;
-        await wrp(topData,csvName)
+        await wrp(topExchData,csvName)
+    }
+    catch (e){
+        console.log(e);
+    }
+}
+
+// top fiat pairing and exchange
+const getTopFiat = async (fsym, lim, wrp=jcsv) => {
+    try {
+        const topFiatData = await cc.topPairs(fsym, lim);
+        const csvName = `Top_pairs_${fsym}_${lim}.csv`;
+        await wrp(topFiatData, csvName)
     }
     catch (e){
         console.log(e);
@@ -38,7 +50,8 @@ const getTopExchanges = async (fsym,tsym,lim=5,wrp=jcsv) => {
 // exports
 module.exports = {
     getPrices: getPrices,
-    getTopExchanges: getTopExchanges
+    getTopExchanges: getTopExchanges,
+    getTopFiat: getTopFiat
 }
 
 
