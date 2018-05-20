@@ -8,7 +8,7 @@ module.exports.Command = class Command {
         this.action = action;
     }
     // call the command outside the command line
-    call(){
-        this.action();
+    describe(){
+        return `${this.description}\nCommand: ${command} can be called as ${alias}`;
     }
 };
