@@ -35,8 +35,7 @@ Please use and break the application! I welcome any comments, suggestions, pull 
 ## Installation and Use
 
 - First, make sure you have git and node installed on your local computer
-- Next, initialize an empty git repository in a new or existing directory.
-- Clone this repository and navigate into the crypto-2-csv folder
+- Then, clone this repository and navigate into the crypto-2-csv folder
 - Run `npm install` or `yarn install` to get install dependencies locally
 - Use the command line to make API calls and get data as CSV
 
