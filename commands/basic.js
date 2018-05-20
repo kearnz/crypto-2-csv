@@ -13,7 +13,7 @@ const coins = new Command(
 );
 
 const exchanges = new Command(
-    command = "getExchanges <csvname>",
+    command = "getExchanges <csvname> [explode]",
     alias = "ge",
     description = "Get all exchanges tracked by CryptoCompare",
     action = api.callExchanges

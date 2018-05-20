@@ -10,7 +10,7 @@ const jsonToCsv = async (data, csvName, explode) => {
         const fields = _.keys(data[0]);
         const jsonData = explode ? new JsonCsv({fields, unwind: explode}) : new JsonCsv({fields});
         const csvRes = jsonData.parse(data);
-        await fs.writeFile(csvName,csvRes, (e) => console.log(e));
+        await fs.writeFile(csvName, csvRes, (e) => console.log(e));
         console.log(`${csvName} written to current directory`);
     } 
     catch(e) {

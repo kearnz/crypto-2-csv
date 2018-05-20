@@ -1,8 +1,7 @@
 /* CLASS OBJECT FOR GENERATING SIMPLE COMMAND LINE FUNC */
-
 module.exports.Command = class Command {
     //constructor for basic CLI
-    constructor(command,alias,description,action){
+    constructor(command, alias, description, action){
         this.command = command;
         this.alias = alias;
         this.description = description;
@@ -13,4 +12,3 @@ module.exports.Command = class Command {
         this.action();
     }
 };
-    

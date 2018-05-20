@@ -1,0 +1,5 @@
+# 1 - Step back and look at directory. Directory Structure needs to be re-organized
+# 2 - Explode needs to be dealt with better in exchanges
+# 3 - Need to figure out how to do options in commands & improve command line tool in general
+# 4 - See if can support express app or if that needs to be separate.
+# 5 - Need to add in time frame option for pricing data
