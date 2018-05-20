@@ -26,7 +26,7 @@ const getExchanges = async (csvName, explode, wrp=jcsv) => {
             o["coin"] = _.keys(exchCall[p]).length ? _.keys(exchCall[p]) : "";
             return o;
         });
-        if (typeof explode === 'undefined') { 
+        if (typeof explode === "undefined") { 
             explode = false
         }
         await wrp(exchData, csvName, explode)

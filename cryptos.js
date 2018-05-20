@@ -9,8 +9,8 @@ const commands = require("./commands/basic")
 
 // command line arguments
 program
-    .version('1.0.0')
-    .description('Crypto Compare csv wrappers from node!');
+    .version("1.0.0")
+    .description("Crypto Compare csv wrappers from node!");
 
 // adding a new command
 const addCommand = (cmd, prog=program) => {
@@ -27,8 +27,5 @@ addCommand(commands.exchanges);
 addCommand(commands.prices);
 addCommand(commands.topexbycoin);
 addCommand(commands.topfiatbycoin);
-//
-
-
 
 program.parse(process.argv);
