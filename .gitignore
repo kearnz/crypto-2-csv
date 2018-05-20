@@ -8,6 +8,9 @@ yarn-error.log*
 # csv files
 *.csv
 
+# my miscellaneous tasks
+*.todo
+
 # Runtime data
 pids
 *.pid
@@ -59,6 +62,3 @@ typings/
 
 # next.js build output
 .next
-
-# my miscellaneous tasks
-*.todo
