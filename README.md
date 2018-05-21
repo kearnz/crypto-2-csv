@@ -43,6 +43,7 @@ Please use and break the application! I welcome any comments, suggestions, pull 
 
 1. Description: `node cryptos -h`
 1. Get all coins: `node cryptos gc coins.csv`
-3. Get last day of prices for ETH-USD in minutes: `node cryptos gph ETH USD 1440`  
-4. Get top 10 exchanges by volume for crypto-fiat pairing: `node cryptos gtce BTC JPY 10`
+3. Get last day of prices for ETH-USD in minutes: `node cryptos gph minute ETH USD 1440`
+4. Get daily XRP-USD for the month of Jan 2018: `node cryptos gph daily XRP USD 31 2018-01-31`  
+5. Get top 10 exchanges by volume for crypto-fiat pairing: `node cryptos gtce BTC JPY 10`
 
