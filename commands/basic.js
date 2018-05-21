@@ -23,7 +23,7 @@ const exchanges = new Command(
 
 // command to get the prices based on 1: day, 2: hour, 3: minute
 const prices = new Command(
-    command = "getPrices <time> <fsym> <tsym> [lim] [exch]",
+    command = "getPrices <time> <fsym> <tsym> [dt] [lim] [exch]",
     alias = "gph",
     description = "Get historical prices based on time frequency",
     action = api.callPrices

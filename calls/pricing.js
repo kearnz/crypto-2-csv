@@ -3,10 +3,10 @@
 const jcsv = require("../wrappers/fileparser").jsonToCsv,
     _ = require("underscore"),
     cc = require("cryptocompare");
-
+    
 // generic pricing function
 // fnName = histoDay, histoHour, histoMinute
-const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
+const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => { 
     try {
         const priceCall = await fnName(fsym,tsym,options);
         const priceData = _.map(priceCall,p => {
@@ -15,7 +15,9 @@ const getPrices = async (fnName,fsym,tsym,options,wrp=jcsv) => {
             p["exchange"] = options.exchange || "average";
             return p;
         });
-        const csvName = `${fnName.name}_${fsym}_${tsym}_${priceData[0].exchange}.csv`;
+        const tm = options.timestamp;
+        const exc = priceData[0].exchange;
+        const csvName = `${fnName.name}_${fsym}_${tsym}_${exc}_${tm}.csv`;
         await wrp(priceData,csvName)
     } 
     catch (e) {

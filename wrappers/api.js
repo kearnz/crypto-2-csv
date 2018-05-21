@@ -2,6 +2,7 @@
 const refdata = require("../calls/refdata"),
     pricing = require("../calls/pricing"),
     _ = require("underscore"),
+    moment = require("moment"),
     cc = require("cryptocompare");
 
 // helper coin func
@@ -11,9 +12,12 @@ const callCoins = (csvname) => refdata.getCoins(csvname);
 const callExchanges = (csvname, explode) => refdata.getExchanges(csvname, explode);
 
 // helper price func
-const callPrices = (time, fsym, tsym, lim, exch) => {
+const callPrices = (time, fsym, tsym, dt, lim, exch) => {
     const options = {};
     options.limit = lim || 2000;
+    //if dt null, moment(undefined) - today();
+    options.timestamp = moment(dt).toDate();
+    console.log(options.timestamp);
     const priceFn = {
         "day": cc.histoDay, 
         "hour": cc.histoHour, 
