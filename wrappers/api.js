@@ -17,7 +17,6 @@ const callPrices = (time, fsym, tsym, lim, dt, exch) => {
     options.limit = lim || 2000;
     //if dt null, moment(undefined) - today();
     options.timestamp = moment(dt).toDate();
-    console.log(options.timestamp);
     const priceFn = {
         "day": cc.histoDay, 
         "hour": cc.histoHour, 
