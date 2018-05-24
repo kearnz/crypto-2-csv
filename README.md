@@ -25,7 +25,7 @@ Please use and break the application! I welcome any comments, suggestions, pull 
 
 ## Future Steps
 
-1. Add time component to the pricing API Calls.
+~1. Add time component to the pricing API Calls.~
 2. Clean up the command line methods. Use options and arguments as opposed to just arguments.
 3. Build as an express application one can run locally.
 4. Add better error handling and unit testing.
