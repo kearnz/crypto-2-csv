@@ -20,8 +20,11 @@ COINARR=($(awk '{print $2}' $RES | tr -d '"'))
 # NOTE - below is for example only - would not want these values if scheduled job
 for coin in ${COINARR[@]}
 do
+    # example of last 4 days in days and hours
     node cryptos gph day $coin USD 4 "2018-05-26T00:00:00" &
     node cryptos gph hour $coin USD 96 "2018-05-26T00:00:00" &
+
+    # note that max is 2000, so must pull each day individually
     node cryptos gph minute $coin USD 1440 "2018-05-23T00:00:00" &
     node cryptos gph minute $coin USD 1440 "2018-05-24T00:00:00" &
     node cryptos gph minute $coin USD 1440 "2018-05-25T00:00:00" &
