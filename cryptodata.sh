@@ -20,8 +20,12 @@ COINARR=($(awk '{print $2}' $RES | tr -d '"'))
 # NOTE - below is for example only - would not want these values if scheduled job
 for coin in ${COINARR[@]}
 do
-    node cryptos gph day $coin USD 2000 "2018-05-22T00:00:00" &
-    node cryptos gph hour $coin USD 2000 "2018-05-22T00:00:00" &
+    node cryptos gph day $coin USD 4 "2018-05-26T00:00:00" &
+    node cryptos gph hour $coin USD 96 "2018-05-26T00:00:00" &
+    node cryptos gph minute $coin USD 1440 "2018-05-23T00:00:00" &
+    node cryptos gph minute $coin USD 1440 "2018-05-24T00:00:00" &
+    node cryptos gph minute $coin USD 1440 "2018-05-25T00:00:00" &
+    node cryptos gph minute $coin USD 1440 "2018-05-26T00:00:00" &
     # have to sleep to avoid api limits
     sleep 1
 done
