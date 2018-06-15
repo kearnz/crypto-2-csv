@@ -24,6 +24,8 @@ This project is a major work in progress. Steps taken so far:
 1. Build command line tool to work with the Crypto Compare API through node's cryptocompare package.
 2. Write simple JSON to CSV parser based on crypto specific calls.
 3. Test functionality of prebuild commands.
+4. Pull data on the top 25 coins.
+5. Compute some simple time series analysis to model price mean and variance.
 
 Please use and break the application! I welcome any comments, suggestions, pull requests, etc.
 
@@ -35,6 +37,7 @@ Please use and break the application! I welcome any comments, suggestions, pull 
 4. Add better error handling and unit testing.
 5. Add more options than simply csv (extend to store in DB).
 6. Integrate with other data sources and APIs.
+7. Add in more advanced time series analysis, including ARFIMA & LTSM
 
 ## Installation and Use
 
