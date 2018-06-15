@@ -1,5 +1,5 @@
 # Crypto 2 CSV
-Microservice to get Crypto data with examples of time series analysis
+Microservice to get Cryptocurrency data and a few examples of time series analysis
 
 ## Main Dependencies
 
@@ -14,8 +14,8 @@ Microservice to get Crypto data with examples of time series analysis
 This project started as a simple way to parse JSON and return CSV files that are easy to load into pandas or R dataframes. It is currently a command line tool with some pre-configured api calls that allow a user to easily grab OHLCV for any coin or metadata regarding the coin marketplace. 
 
 This repo also contains a few simple examples of how this CLI could be useful. It cointains:
-1. A bash script to pull data for the top 25 coins
-2. An R-markdown to load the coins into R dataframes for analysis
+* A bash script to pull data for the top 25 coins
+* An R-markdown to load the coins into R dataframes for analysis
 
 ## Progress
 
@@ -23,21 +23,20 @@ This project is a major work in progress. Steps taken so far:
 
 1. Build command line tool to work with the Crypto Compare API through node's cryptocompare package.
 2. Write simple JSON to CSV parser based on crypto specific calls.
-3. Test functionality of prebuild commands.
-4. Pull data on the top 25 coins.
-5. Compute some simple time series analysis to model price mean and variance.
+3. Add time component to the pricing API Calls.
+4. Test functionality of prebuild commands.
+5. Pull data on the top 25 coins.
+6. Compute some simple time series analysis to model price mean and variance.
 
 Please use and break the application! I welcome any comments, suggestions, pull requests, etc.
 
 ## Future Steps
 
-1. ~Add time component to the pricing API Calls.~
-2. Clean up the command line methods. Use options and arguments as opposed to just arguments.
-3. Build as an express application one can run locally.
-4. Add better error handling and unit testing.
-5. Add more options than simply csv (extend to store in DB).
-6. Integrate with other data sources and APIs.
-7. Add in more advanced time series analysis, including ARFIMA & LTSM
+1. Clean up the command line methods. Use options and arguments as opposed to just arguments.
+2. Add better error handling and unit testing.
+3. Add more options than simply csv (extend to store in DB).
+4. Integrate with other data sources and APIs.
+5. Add in more advanced time series analysis, including ARFIMA & LTSM
 
 ## Installation and Use
 
