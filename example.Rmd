@@ -1,6 +1,4 @@
----
-title: "Example Analysis"
----
+## Example Analysis
 
 ```{r setup, include=TRUE}
 # clear environment
@@ -65,7 +63,7 @@ all.cols <- c("open","high","low","close","log_open","log_high","log_low","log_c
 
 ```
 
-The helper functions above make it easy to provide routine operations for multiple coins. The next code section below loads actual crypto data, using the wrapper above when necessary. To start, we load roughly the last year of daily data for all the top 25 coins. Note that some of the coins in this list have not even been around for a year, so we'll start our analysis on a few we know will have sufficient data. Those are BTC (Bitcoin), Ethereum (ETH), and XMR (Monero).
+The helper functions above make it easy to provide routine operations for multiple coins. The next code section below loads actual crypto data, using the wrapper above when necessary. To start, load roughly the last year of daily data for all the top 25 coins. Data on these coins was collected using the sample bash script in this git repo. 
 
 ```{r exampleloads, warning=FALSE, include=TRUE}
 # set working directory to wherever files are relative to current directory
@@ -91,7 +89,7 @@ test.main.coins <- lapply(main.coins, function(df) subset(df, train==FALSE))
 
 ## Basic Analysis
 
-We start off analysis by looking at qualitative and quantitative tests for the coins we've selected. We always start with the raw data itself. In general, we are interested in basic characteristics of our time series. 
+Start off analysis by looking at qualitative and quantitative tests for the coins we've selected. We always start with the raw data itself. In general, we are interested in basic characteristics of our time series. 
 
 ```{r, basicexplore, include=TRUE, warning=FALSE}
 
