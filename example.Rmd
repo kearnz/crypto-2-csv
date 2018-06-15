@@ -1,0 +1,305 @@
+---
+title: "Example Analysis"
+---
+
+```{r setup, include=TRUE}
+# clear environment
+rm(list=ls())
+knitr::opts_chunk$set(echo = TRUE)
+
+# load packages
+library("forecast")
+library("tseries")
+library("ggfortify")
+library("tidyverse")
+library("lubridate")
+library("rugarch")
+library("dynlm")
+library("vars")
+```
+
+## Exploring Basic Information about Cryptocurrencies
+
+<div style="font-size:16px;color:navy;"><b><em></u>Data Preprocessing and Manipulation</u></b></em></div>
+
+After collecting data on the "most liquid" coins in the cryptocurrency space, begin with some preprocessing and manipulation. The two methods below:
+<ul>
+<li>Load a CSV file by name</li>
+<li>Convert UNIX time to date, then sort the result by date</li>
+<li>Filter the dataset based on optional user-provided periods</li>
+<li>Calculate logs for price and volume data</li>
+<li>Automatically split the dataset into training and test portions based on user-specified %</li>
+</ul>
+
+```{r dataloadwrapper, include=TRUE}
+
+# wrapper function to get coin data and perform basic date manipulations
+get.coin.data <- function(csv.name, date.start = NULL, date.end = NULL, split = 0.8) {
+  dt.wrp <- function(t, d, fn) ifelse(is.null(d), fn(t), d)
+  coin.df <- read.csv(csv.name) %>%
+    mutate(
+      time = as_datetime(time),
+      year = year(time),
+      month = month(time),
+      day = day(time)
+    ) %>%
+    arrange(time) %>%
+    filter(
+      time >= dt.wrp(time, date.start, first) &
+      time <= dt.wrp(time, date.end, last)) %>%
+    mutate(
+      log_open = log(open),
+      log_high = log(high),
+      log_low = log(low),
+      log_close = log(close),
+      log_volumeto = log(volumeto),
+      log_volumefrom = log(volumefrom),
+      train = 1:length(time) < split * length(time)
+    )
+  return(coin.df)
+}
+
+# main dataframe columns
+all.cols <- c("open","high","low","close","log_open","log_high","log_low","log_close",
+              "volumeto","volumefrom","log_volumeto","log_volumefrom")
+
+```
+
+The helper functions above make it easy to provide routine operations for multiple coins. The next code section below loads actual crypto data, using the wrapper above when necessary. To start, we load roughly the last year of daily data for all the top 25 coins. Note that some of the coins in this list have not even been around for a year, so we'll start our analysis on a few we know will have sufficient data. Those are BTC (Bitcoin), Ethereum (ETH), and XMR (Monero).
+
+```{r exampleloads, warning=FALSE, include=TRUE}
+# set working directory to wherever files are relative to current directory
+setwd("Crypto_ETL/day")
+
+# look csv files from the directory and look at all the coin names
+(files <- list.files(pattern = "*.csv")) 
+(coin.names <- sapply(strsplit(files, "_"), "[", 2))
+
+# define coin list
+coin.list <- as.list(setNames(files, coin.names))
+
+# create all coin dfs for past year
+coin.dfs <- lapply(coin.list, function(coin) get.coin.data(coin, "2017-05-01","2018-05-01",0.7))
+
+# let's isolate a few coins
+main.coins <- list(btc = coin.dfs$BTC, eth = coin.dfs$ETH, xmr = coin.dfs$XMR)
+
+# isolating the training and test data
+train.main.coins <- lapply(main.coins, function(df) subset(df, train==TRUE))
+test.main.coins <- lapply(main.coins, function(df) subset(df, train==FALSE))
+```
+
+## Basic Analysis
+
+We start off analysis by looking at qualitative and quantitative tests for the coins we've selected. We always start with the raw data itself. In general, we are interested in basic characteristics of our time series. 
+
+```{r, basicexplore, include=TRUE, warning=FALSE}
+
+# compute simple statistics for stationarity of time series
+simple.stats <- function(coin.df, cols = all.cols, dff = F) {
+    print(head(coin.df[,"symbol"],1))
+    coin.df <- coin.df[,cols]
+    coin.df <- if (isTRUE(dff)) as.data.frame(apply(coin.df,2,diff,na.rm=T)) else coin.df
+    tsdisplay(coin.df[,"log_close"])
+    results <- data.frame(
+      var  = names(coin.df),
+      adf.pval = sapply(coin.df, function(v) adf.test(v)$p.value),
+      kpss.pval = sapply(coin.df, function(v) kpss.test(v)$p.value)
+    )
+    results$adf.stationary <- results$adf.pval < 0.05
+    results$kpss.stationary <- results$kpss.pval > 0.05
+    row.names(results) <- c()
+    return(results)
+}
+
+lapply(main.coins, simple.stats)
+```
+
+<div style="font-size:16px;color:navy;"><b><em><u>Transformations</b></em></u></div>
+
+The first thing to note is that we will generally deal with the log transform of price in this study. We take the log transform of price because this transformation will help us measure <b> relative change </b> in coin prices. Given that cryptocoins trade at radically different prices, their linear change will be hard to compare, so we take the log of pricing data. The same is generally true for volume.
+
+The method above returns three plots and one table for each of the coins we observe. The plots visually demonstrate non-stationarity of our main variable of interest - log closing price. The ACF shows significant autocorrelation that doesn't even decay exponentially. This visual indicates differencing is necessary, and it may even hint that a long-term memory process exists. 
+
+The tables quantitatively test for stationarity in all the time series data we have for each coin. For all price (both standard and log) columns, the ADF test and the KPSS test confirm that the data is non-stationary. The result is similar for volumeto, but we see <b>conflicting test results for volumefrom</b>. Volumeto is the USD equivalent of the coin amount traded, while volumefrom is the actual number of a given cryptocurrency that changed hands. It makes sense that volumeto is non-stationary, as it will be highly correlated with the coin's price movements. Volumefrom, on the other hand, may be an indicator of price movement, and the tests give us conflicting results because they have different null hypothesis. These conflicting results occur when a process may not have a unit root (adf.test), but may not necessarily be level stationary either (kpss.test).
+
+<div style="font-size:16px;color:navy;"><b><em><u>Differencing the data</b></em></u></div>
+
+Based on the test results above, we take the first difference to see if our data is now stationary. We can utilize the same method above, but change the difference paramater to TRUE.
+
+```{r diffdata, include=TRUE, warning=FALSE}
+lapply(main.coins, function(t) simple.stats(t, dff = T))
+```
+
+Applying the differencing method to the columns in our dataframe shows that our columns are now stationary (or at least do not include a unit root, as tested by the adf.test). The plots indicate stationarity as well, although there is some autocorrelation that is significant, but the results are far more stationary than our first set of plots. Note that the difference of the log transform in price represents the <b>daily returns of each coin</b>.
+
+## Modeling the Mean
+
+The basic tests above help inform our decision on how to model the mean of our time series. We know we are going to need to deal with differencing each coin's closing price, and we may need to include autogressive and/or moving average components. We use an Arima model to represent our data as a stationary time series that we can then use for forecasting the mean. 
+
+<div style="font-size:16px;color:navy;"><b><em><u>ARIMA Model</b></em></u></div>
+
+```{r modelmean, include=TRUE, warning=FALSE}
+
+# test different arima parameters
+get.arima.stats <- function(coin.df,col,dff=F) {
+  arima.func <- if (isTRUE(dff)) auto.arima(diff(coin.df[[col]])) else auto.arima(coin.df[[col]])
+  if (isTRUE(dff)){
+    print(head(coin.df[,"symbol"],1))
+    print(arima.func)
+    resids <- arima.func$residuals
+    print(Box.test(resids^2, type="Ljung-Box"))
+    print(jarque.bera.test(resids))
+    acf(resids)
+    plot(resids^2)
+  }
+  return(arima.func)
+}
+
+tr.arima.funcs <- lapply(train.main.coins, function(df) get.arima.stats(df, "log_close"))
+tr.arima.funcs.diff <- lapply(train.main.coins, function(df) get.arima.stats(df, "log_close",T))
+```
+
+The method above does a couple important things:
+<ul>
+<li>Computes the Arima model for each coin's returns</li>
+<li>Tests whether the variance of the residuals is constant (Box-Ljung w/ squared resids)</li>
+<li>Tests whether the variance of the residuals comes from a normal distribution (Jarque Bera Test)</li>
+<li>Plots the ACF of the residuals to visually inspect if "white noise"</li>
+<li>Plots the squared residuals over time</li>
+</ul>
+
+Our ARIMA models do one thing - model the mean. In doing so, our ARIMA models work fairly well on the training data, but those models are fairly naive. They simply identify the need for differencing and potentially an AR or MA term. Because the training data behaves much like a random walk with drift, the best guess for a one-step forecast is whatever the last value of the training data was. And that works well for fitting purposes, but we see below that it provides terrible forecasting ability. 
+
+<div style="font-size:16px;color:navy;"><b><em><u>Troubles with Forecasting</b></em></u></div>
+
+```{r testi, include=TRUE, warning=FALSE}
+
+plot.diagnostics <- function(arima.func,test.series, title){
+  print(title)
+  autoplot(forecast(arima.func,h=30)) +
+    autolayer(ts(head(test.series, 30),
+                 start = length(fitted(arima.func))),
+                 series = "test data") +
+    autolayer(ts(fitted(arima.func)), 
+              series = "fitted vals")
+}
+
+
+# Initial Plots For Log Price
+(visual.btc.diagnostics <- plot.diagnostics(tr.arima.funcs$btc,
+                                            test.main.coins$btc$log_close,
+                                            "BTC Actual, Fitted, Forecast, and Test"))
+(visual.eth.diagnostics <- plot.diagnostics(tr.arima.funcs$eth,
+                                            test.main.coins$eth$log_close,
+                                            "ETH Actual, Fitted, Forecast, and Test"))
+(visual.xmr.diagnostics <- plot.diagnostics(tr.arima.funcs$xmr,
+                                            test.main.coins$xmr$log_close,
+                                            "XMR Actual, Fitted, Forecast, and Test"))
+
+# Additional Plots for Log Diff Price
+(visual.btc.diagnostics <- plot.diagnostics(tr.arima.funcs.diff$btc,
+                                            diff(test.main.coins$btc$log_close),
+                                            "BTC Actual, Fitted, Forecast, and Test"))
+(visual.eth.diagnostics <- plot.diagnostics(tr.arima.funcs.diff$eth,
+                                            diff(test.main.coins$eth$log_close),
+                                            "ETH Actual, Fitted, Forecast, and Test"))
+(visual.xmr.diagnostics <- plot.diagnostics(tr.arima.funcs.diff$xmr,
+                                            diff(test.main.coins$xmr$log_close),
+                                            "XMR Actual, Fitted, Forecast, and Test"))
+
+```
+
+From the plots above, we see that the Arima model fit the training data pretty well. It differenced our log pricing data to create "returns", and then it assumed the next period would be about equal to the last period, plus the trend the model noticed. But the models also make a number of costly assumptions. They assume that the residuals from modeling the mean have a constant variance and a normal distribution. They use those assumptions to calculate the confidence intervals of the forecasts. 
+
+In our initial modeling phase, we computed a number of tests. The Box-Ljung test for each model concluded that the residuals had conditional heteroskedasticity, and the Jarque Bere test for each model concluded that the residuals were not from a normal distribution. As a result, our models do not do a very good job forecasting what could happen in the next 30 days, since they do not take into account the nature of the residuals and the fat tails of their distribution.
+
+## Modeling the Variance
+
+<div style="font-size:16px;color:navy;"><b><em><u>The Garch Family</b></em></u></div>
+
+In this section, we consider only bitcoin to stay consistent with our presentation. But the methods below for measuring and forecasting variance could be applied to any coin. 
+
+The methods consider variance in four different ways. First, we assume that variance is constant, which would effectively fit a garch(0,0) model. This assumption is what we get from a standard ARIMA. Next, we apply an actual garch(1,1), followed by an egarch model and an EWMA.
+
+<div style="font-size:16px;color:navy;"><b><em><u>The Training Set</b></em></u></div>
+
+
+The plots for bitcoin demonstrate how each model accounts for variance. 
+
+```{r variancenogarch, include=T, warning=F}
+garches <- function(ts, title){
+  # no garch
+  spec <- ugarchspec(
+    variance.model=list(model = 'sGARCH', garchOrder = c(0,0)),
+    mean.model=list(armaOrder = c(0,0), include.mean = T),
+    distribution.model = "std")
+  
+  # garch(1,1)
+  spec.garch <- ugarchspec(
+    variance.model=list(model = 'sGARCH', garchOrder = c(1,1)),
+    mean.model=list(armaOrder = c(0,0), include.mean = T),
+    distribution.model = "std")
+  
+  # eGarch(1,1)
+  spec.egarch <- ugarchspec(
+    variance.model=list(model = 'eGARCH', garchOrder = c(1,1)),
+    mean.model=list(armaOrder = c(0,0), include.mean = T),
+    distribution.model = "std")
+  
+  # EWMA
+  spec.ewma <- ugarchspec(variance.model=list(model="iGARCH", garchOrder=c(1,1)), 
+ 		mean.model=list(armaOrder = c(0,0), include.mean=TRUE),  
+  	distribution.model="std", fixed.pars=list(omega=0))
+  
+  # fit with no garch
+  fit <- ugarchfit(spec, ts, solver = 'hybrid')
+  
+  # fit with garch
+  fit.garch <- ugarchfit(spec.garch, ts, solver = 'hybrid')
+  
+  # fit egarch
+  fit.egarch <- ugarchfit(spec.egarch, ts, solver = 'hybrid')
+  
+  # fit with EWMA
+  fit.ewma <- ugarchfit(spec.ewma, ts, solver = 'hybrid')
+  print(title)
+  print("no garch")
+  plot(fit, which = 1)
+  print("garch(1,1)")
+  plot(fit.garch, which = 1)
+  print("egarch(1,1)")
+  plot(fit.egarch, which = 1)
+  print("iGarch/ewma(1,1)")
+  plot(fit.ewma, which = 1)
+  
+  return(list("arima"=fit,"garch"=fit.garch,"egarch"=fit.egarch,"ewma"=fit.ewma))
+}
+
+# btc
+btc.garch <- garches(diff(train.main.coins$btc$log_close), "BTC")
+
+```
+
+<div style="font-size:16px;color:navy;"><b><em><u>The Testing Set</b></em></u></div>
+
+Finally, we apply each forecasting model to our training set to get results of the fit to the hold out sample.
+
+```{r botostrap, include = T}
+btc.forecast.garch <- garches(diff(test.main.coins$btc$log_close), "BTC")
+
+btc.arima<-accuracy(ts(btc.forecast.garch$arima@fit$var),diff(test.main.coins$btc$log_close)) 
+btc.ewma<-accuracy(ts(btc.forecast.garch$ewma@fit$var),diff(test.main.coins$btc$log_close)) 
+btc.garch<-accuracy(ts(btc.forecast.garch$garch@fit$var),diff(test.main.coins$btc$log_close)) 
+btc.egarch<-accuracy(ts(btc.forecast.garch$egarch@fit$var),diff(test.main.coins$btc$log_close)) 
+
+f <- t(cbind(t(btc.arima),t(btc.ewma),t(btc.garch),t(btc.egarch)))
+rownames(f) <- c("arima","ewma","garch","egarch")
+f
+```
+
+<div style="font-size:16px;color:navy;"><b><em><u>Conclusion and Future Work</b></em></u></div>
+
+This analysis looks mainly at the potential risk involved with investing in Cryptocurrencies. We successfully applied financial models to a new marketplace, proving that they can help an investor account for the value at risk when they make cryptocurrency investments. 
+
+This analysis is meant to be extended. In this study we've looked at univariate cases only. We have not looked at other factors that may affect the mean (and thus, the variance) of a cryptocurrency's price. Additionally, we have not looked at or applied any trading strategies based on the modeling we produced. Future work could use the models developed in this analysis as benchmarks for trading strategies.
