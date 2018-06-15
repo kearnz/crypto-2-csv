@@ -295,9 +295,3 @@ f <- t(cbind(t(btc.arima),t(btc.ewma),t(btc.garch),t(btc.egarch)))
 rownames(f) <- c("arima","ewma","garch","egarch")
 f
 ```
-
-<div style="font-size:16px;color:navy;"><b><em><u>Conclusion and Future Work</b></em></u></div>
-
-This analysis looks mainly at the potential risk involved with investing in Cryptocurrencies. We successfully applied financial models to a new marketplace, proving that they can help an investor account for the value at risk when they make cryptocurrency investments. 
-
-This analysis is meant to be extended. In this study we've looked at univariate cases only. We have not looked at other factors that may affect the mean (and thus, the variance) of a cryptocurrency's price. Additionally, we have not looked at or applied any trading strategies based on the modeling we produced. Future work could use the models developed in this analysis as benchmarks for trading strategies.
