@@ -1,5 +1,5 @@
 # Crypto 2 CSV
-Microservice to get Crypto data for Time Series Analysis
+Microservice to get Crypto data with examples of time series analysis
 
 ## Main Dependencies
 
@@ -11,7 +11,11 @@ Microservice to get Crypto data for Time Series Analysis
 
 ## About
 
-This project started as a simple way to parse JSON and return CSV files that are easy to load into pandas or R dataframes. It is currently a command line tool with some pre-configured api calls. 
+This project started as a simple way to parse JSON and return CSV files that are easy to load into pandas or R dataframes. It is currently a command line tool with some pre-configured api calls that allow a user to easily grab OHLCV for any coin or metadata regarding the coin marketplace. 
+
+This repo also contains a few simple examples of how this CLI could be useful. It cointains:
+1. A bash script to pull data for the top 25 coins
+2. An R-markdown to load the coins into R dataframes for analysis
 
 ## Progress
 
