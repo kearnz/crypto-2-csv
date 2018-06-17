@@ -89,7 +89,7 @@ test.main.coins <- lapply(main.coins, function(df) subset(df, train==FALSE))
 
 ## Basic Analysis
 
-Start off analysis by looking at qualitative and quantitative tests for the coins we've selected. We always start with the raw data itself. In general, we are interested in basic characteristics of our time series. 
+Begin analysis with qualitative and quantitative tests for the coins we've selected. In general, we are interested in basic characteristics of our time series. 
 
 ```{r, basicexplore, include=TRUE, warning=FALSE}
 
