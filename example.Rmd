@@ -63,7 +63,7 @@ all.cols <- c("open","high","low","close","log_open","log_high","log_low","log_c
 
 ```
 
-The helper functions above make it easy to provide routine operations for multiple coins. The next code section below loads actual crypto data, using the wrapper above when necessary. To start, load roughly the last year of daily data for all the top 25 coins. Data on these coins was collected using the sample bash script in this git repo. 
+To start, load roughly the last year of daily data for all the top 25 coins. Data on these coins was collected using the sample bash script in this git repo. 
 
 ```{r exampleloads, warning=FALSE, include=TRUE}
 # set working directory to wherever files are relative to current directory
@@ -115,7 +115,7 @@ lapply(main.coins, simple.stats)
 
 <div style="font-size:16px;color:navy;"><b><em><u>Transformations</b></em></u></div>
 
-We will generally deal with the log transform because this transformation will help us measure <b> relative change </b> in coin prices. Given that cryptocoins trade at radically different prices, their aboslute linear price change will be hard to compare, so we take the log of pricing data. The same is generally true for volume.
+This analysis uses log transform to measure <b> relative change </b> in coin prices. Given that cryptocoins trade at radically different prices, their aboslute linear price change will be hard to compare, so we take the log of pricing data. The same is generally true for volume. 
 
 The method above returns three plots and one table for each of the coins we observe. The plots visually demonstrate non-stationarity of our main variable of interest - log closing price. The ACF shows significant autocorrelation that doesn't even decay exponentially. This visual indicates differencing is necessary, and it also hints that a long-term memory process exists. 
 
@@ -221,7 +221,6 @@ In this section, we consider only bitcoin to stay consistent with our presentati
 The methods consider variance in four different ways. First, we assume that variance is constant, which would effectively fit a garch(0,0) model. This assumption is what we get from a standard ARIMA. Next, we apply an actual garch(1,1), followed by an egarch model and an EWMA.
 
 <div style="font-size:16px;color:navy;"><b><em><u>The Training Set</b></em></u></div>
-
 
 The plots for bitcoin demonstrate how each model accounts for variance. 
 
