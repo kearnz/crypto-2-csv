@@ -20,6 +20,8 @@ library("vars")
 
 <div style="font-size:16px;color:navy;"><b><em></u>Data Preprocessing and Manipulation</u></b></em></div>
 
+To start, load roughly the last year of daily data for all the top 25 coins. Data on these coins was collected using the sample bash script in this git repo. 
+
 After collecting data on the "most liquid" coins in the cryptocurrency space, begin with some preprocessing and manipulation. The two methods below:
 <ul>
 <li>Load a CSV file by name</li>
@@ -63,8 +65,6 @@ all.cols <- c("open","high","low","close","log_open","log_high","log_low","log_c
 
 ```
 
-To start, load roughly the last year of daily data for all the top 25 coins. Data on these coins was collected using the sample bash script in this git repo. 
-
 ```{r exampleloads, warning=FALSE, include=TRUE}
 # set working directory to wherever files are relative to current directory
 setwd("Crypto_ETL/day")
@@ -89,7 +89,9 @@ test.main.coins <- lapply(main.coins, function(df) subset(df, train==FALSE))
 
 ## Basic Analysis
 
-Begin analysis with qualitative and quantitative tests for the coins we've selected. In general, we are interested in basic characteristics of our time series. 
+In this example, we strive to model the mean and variance of cryptocurrency closing prices.
+
+Begin analysis with qualitative and quantitative tests for the coins we've selected. In general, we are interested in basic characteristics of our time series. To keep things simple, we'll look at a couple coins only, but this method could be applied to all the coins to compare their relationships.
 
 ```{r, basicexplore, include=TRUE, warning=FALSE}
 
