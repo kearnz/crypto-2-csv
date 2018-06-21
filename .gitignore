@@ -9,7 +9,7 @@ yarn-error.log*
 *.csv
 
 # R history
-*.Rhistory
+.Rhistory
 
 # my miscellaneous tasks
 *.todo
